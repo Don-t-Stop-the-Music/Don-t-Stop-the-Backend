@@ -1,5 +1,5 @@
 
 def feed_analyser_proc(freq_in, low_bandwidth_output):
     while True:
-        print(f"feedback gets {freq_in.get()[0]}")
+        print(f"dequeued {len(freq_in.get())} frequency ranges")
     None

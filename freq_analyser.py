@@ -24,7 +24,6 @@ def freq_analyser_proc(audio_input, high_bandwidth_output, low_bandwidth_output)
                 np.roll(audio_block, -rollback)
                 current_size = max_size - sample_chunk.size
                 current_analysed = max((current_analysed - rollback), 0)
-                print(f"current_analysed: {current_analysed}")
             # Copies new sample data into audio block
             audio_block[current_size:current_size+sample_chunk.size] = sample_chunk
             current_size = current_size + sample_chunk.size
@@ -34,25 +33,19 @@ def freq_analyser_proc(audio_input, high_bandwidth_output, low_bandwidth_output)
             #print(f"end {audio_block[-1]}")
             #frequency analysis
             working = current_analysed
-            magnitude = None
-            #print("before while loop")
+            magnitude = np.empty(int(analysis_size / 2))
+            #analyse as many times as queue allows(is actually only once when on pc)
             while ((current_size - working) >= analysis_size):
-                print("before sample_set")
                 sample_set = audio_block[working:working + analysis_size]
-                print("before rfft")
                 magnitude = np.abs(np.fft.rfft(sample_set))
-                print("before output to queues")
                 for out in high_bandwidth_output:
                     out.put((magnitude, channel))
-                print(f"working: {working}")
                 working += int(analysis_size / frequency_overlap) 
             #after
-            #print("before magnitude")
-            #if magnitude:
-                #low_bandwidth_output.put((magnitude, "frequency", channel))
-            #print("before current analysed")
+            if magnitude.any():
+                low_bandwidth_output.put((magnitude, "frequency", channel))
+                #print(f"queue updated, working: {working}")
             current_analysed = working
-            #print("before audio_input get")
             sample_chunk, channel = audio_input.get()
 
 def freq_analysers():
