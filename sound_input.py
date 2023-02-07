@@ -20,4 +20,3 @@ def sound_input_proc(analysers):
     with sd.InputStream(device=device, channels=1, callback=callback_w(analysers)):
         while True:
             i=1
-

@@ -8,6 +8,7 @@ import numpy as np
 from sound_input import sound_input_proc
 from freq_analyser import freq_analyser_proc
 from feedback_analyser import feed_analyser_proc
+import sounddevice as sd
 
 if __name__ == '__main__':
     freq_q_1 = Queue()
@@ -23,37 +24,24 @@ if __name__ == '__main__':
 
     bluetooth_in = Queue()
 
-    fap_1 = Process(target=freq_analyser_proc, args=(freq_q_1, [feedback_in_q1, graph_q1], bluetooth_in,))
-    fap_1.start()
+    print(sd.query_devices())
 
-    fap_2 = Process(target=freq_analyser_proc, args=(freq_q_2, [feedback_in_q1, graph_q2], bluetooth_in, ))
-    fap_2.start()
+    #fap_1 = Process(target=freq_analyser_proc, args=([feedback_in_q1, graph_q1], bluetooth_in,))
+    #fap_1.start()
+
+    #fap_2 = Process(target=freq_analyser_proc, args=([feedback_in_q1, graph_q2], bluetooth_in, ))
+    #fap_2.start()
 
 
     feedp_1 = Process(target=feed_analyser_proc, args=(feedback_in_q1, bluetooth_in))
     feedp_1.start()
 
-    feedp_2 = Process(target=feed_analyser_proc, args=(feedback_in_q2, bluetooth_in ))
-    feedp_2.start()
+    freq_analyser_proc([feedback_in_q1, graph_q1], bluetooth_in)
 
-    p = Process(target=sound_input_proc, args=(analysers,))
-    p.start()
+    #feedp_2 = Process(target=feed_analyser_proc, args=(feedback_in_q2, bluetooth_in ))
+    #feedp_2.start()
 
-    def update_eq(frame):
-        #print(f"plotdata: {len(plotdata)}\nlatest: {len(latest)}")
-        #print(plotdata)
-        line[0].set_ydata(graph_q1.get()[0][0:2205])
-        print("updating")
-        return line
+    #p = Process(target=sound_input_proc, args=(analysers,))
+    #p.start()
 
-    length = int(2205)
-    fig, ax = plt.subplots()
-    line = ax.plot(np.zeros(length))
-    line[0].set_xdata(np.linspace(num=length, start=0, stop=20000))
-    ax.axis((20, 20000, -5, 20))
-    ax.set_xscale('log')
-    ax.tick_params(bottom=False, top=False, labelbottom=False, right=False, left=False, labelleft=False)
-    fig.tight_layout(pad=0)
-    ani = FuncAnimation(fig, update_eq, interval=60, blit=True)
-    plt.show()
     #p.join()
