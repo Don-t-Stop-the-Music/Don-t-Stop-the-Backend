@@ -23,7 +23,7 @@ def freq_analyser_proc(audio_input, high_bandwidth_output, low_bandwidth_output)
                 rollback = max(current_analysed, (sample_chunk.size - (max_size - current_size)))
                 np.roll(audio_block, -rollback)
                 current_size -= rollback
-                current_analysed -= rollback
+                current_analysed = 0
 
             # Copies new sample data into audio block
             audio_block[current_size:current_size+sample_chunk.size] = sample_chunk
