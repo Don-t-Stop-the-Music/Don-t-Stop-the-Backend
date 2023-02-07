@@ -13,7 +13,7 @@ def freq_analyser_proc(audio_input, high_bandwidth_output, low_bandwidth_output)
     current_analysed = 0
 
     sample_chunk, channel = audio_input.get()
-    print("here")
+    print("frequency analyser running")
     while True:
         try:
             sample_chunk, channel = audio_input.get_nowait()
