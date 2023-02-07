@@ -54,6 +54,6 @@ if __name__ == '__main__':
     ax.set_xscale('log')
     ax.tick_params(bottom=False, top=False, labelbottom=False, right=False, left=False, labelleft=False)
     fig.tight_layout(pad=0)
-    ani = FuncAnimation(fig, update_eq, interval=30, blit=True)
+    ani = FuncAnimation(fig, update_eq, interval=60, blit=True)
     plt.show()
     #p.join()
