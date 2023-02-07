@@ -10,7 +10,7 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
     print("what")
     audio_input = Queue()
     analysis_size = math.ceil(sample_rate/lowest_hz) * 2
-    max_size = analysis_size * 2
+    max_size = analysis_size * 40
     current_size = 0
     audio_block = np.full(shape=(2,max_size), fill_value=np.nan)
     current_analysed = 0
