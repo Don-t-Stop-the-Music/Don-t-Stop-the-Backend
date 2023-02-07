@@ -5,7 +5,7 @@ from matplotlib.animation import FuncAnimation
 import numpy as np
 
 
-def feed_analyser_proc(freq_in, low_bandwidth_output):
+def feed_analyser_proc(freq_in, low_bandwidth_output, channel):
     print("feedback online")
     
     def update_eq(frame):
@@ -19,13 +19,13 @@ def feed_analyser_proc(freq_in, low_bandwidth_output):
         data = freq_in.get()
 
         limit = freq_in.qsize()
-        print(f"limit: {limit}")
+        #print(f"limit: {limit}")
         for _ in range(limit):
-                print("data get")
+                #print("data get")
                 data = freq_in.get()
-        print(f"data length {len(data[-1])}")
-        line[0].set_ydata(data[-1])
-        print("updating")
+        #print(f"data length {len(data[-1])}")
+        line[0].set_ydata(data[channel])
+        #print("updating")
         return line
 
     length = int(2206)

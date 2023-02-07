@@ -22,9 +22,11 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
             try:
                 #Checks if buffer already full
                 if current_size + sample_chunk.size > max_size:
-                    rollback = max(current_analysed, (sample_chunk.size - (max_size - current_size)))
-                    np.roll(audio_block, -rollback)
-                    current_size -= rollback
+                    print("rollback!")
+                    #rollback = max(current_analysed, (sample_chunk.size - (max_size - current_size)))
+                    #np.roll(audio_block, -rollback)
+                    audio_block[:,:] = np.nan
+                    current_size = 0
                     current_analysed = 0
                 # Copies new sample data into audio block
                 audio_block[:,current_size:current_size+sample_chunk.shape[0]] = np.transpose(sample_chunk)
