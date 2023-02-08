@@ -7,7 +7,7 @@ import sounddevice as sd
 from config import device, bluetooth_samples
 
 def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
-    print("what")
+    #print("what")
     audio_input = Queue()
     analysis_size = math.ceil(sample_rate/lowest_hz) * 2
     max_size = analysis_size * 40
@@ -16,9 +16,9 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
     current_analysed = 0
     logspace = np.logspace(0, np.log10((analysis_size / 2)), bluetooth_samples, dtype=int)
     nums_to_take = np.transpose(np.array([logspace, np.append(logspace[1:], logspace[-1])]))
-    print(nums_to_take)
+    #print(nums_to_take)
 
-    print("here")
+    print("freq_analyser online")
     with sd.InputStream(device=device, callback=callback_w(audio_input)):
         sample_chunk = audio_input.get()
         while True:
