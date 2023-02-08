@@ -1,5 +1,11 @@
 
+from queue import Empty
+from matplotlib import pyplot as plt
+from matplotlib.animation import FuncAnimation
+import numpy as np
+from config import bluetooth_samples
+
+
 def feed_analyser_proc(freq_in, low_bandwidth_output):
     while True:
-        print(f"dequeued {len(freq_in.get())} frequency ranges")
-    None
+        print(f"received {len(freq_in.get())} frequency sets")
