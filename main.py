@@ -29,7 +29,7 @@ if __name__ == '__main__':
     feedp_1 = Process(target=feed_analyser_proc, args=(feedback_in_q1, bluetooth_in, 0))
     feedp_1.start()
 
-    feedp_2 = Process(target=feed_analyser_proc, args=(feedback_in_q2, bluetooth_in, 1))
+    feedp_2 = Process(target=feed_analyser_proc, args=(bluetooth_in, bluetooth_in, 1))
     feedp_2.start()
 
     fap_1.join()

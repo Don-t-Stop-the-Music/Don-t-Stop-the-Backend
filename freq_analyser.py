@@ -4,7 +4,7 @@ import numpy as np
 from config import sample_rate, lowest_hz, frequency_overlap
 import math
 import sounddevice as sd
-from config import device
+from config import device, bluetooth_samples
 
 def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
     print("what")
@@ -14,6 +14,9 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
     current_size = 0
     audio_block = np.full(shape=(2,max_size), fill_value=np.nan)
     current_analysed = 0
+    logspace = np.logspace(0, np.log10((analysis_size / 2)), bluetooth_samples, dtype=int)
+    nums_to_take = np.transpose(np.array([logspace, np.append(logspace[1:], logspace[-1])]))
+    print(nums_to_take)
 
     print("here")
     with sd.InputStream(device=device, callback=callback_w(audio_input)):
@@ -35,7 +38,7 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
             except Empty:
                 #frequency analysis
                 working = current_analysed
-                magnitude = np.empty(int(analysis_size / 2))
+                magnitude = np.full(shape=(2, int(analysis_size / 2) + 1), fill_value=np.nan)
                 #analyse as many times as queue allows(is actually only once when on pc)
                 while ((current_size - working) >= analysis_size):
                     sample_set = audio_block[:,working:working + analysis_size]
@@ -44,8 +47,10 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
                         out.put_nowait(magnitude)
                     working += int(analysis_size / frequency_overlap) 
                 #after
-                if magnitude.any():
-                    low_bandwidth_output.put((magnitude, "frequency"))
+                if (magnitude[0,0] != np.nan):
+                    #put frequency tag back here later
+                    less_magnitude = np.transpose(list(map(lambda x: list(map(lambda y: max(magnitude[y, x[0] - 1 : x[1]]), [0,1])), nums_to_take)))
+                    low_bandwidth_output.put((less_magnitude))
                 current_analysed = working
                 sample_chunk = audio_input.get()
 

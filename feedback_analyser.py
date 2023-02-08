@@ -3,6 +3,7 @@ from queue import Empty
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
+from config import bluetooth_samples
 
 
 def feed_analyser_proc(freq_in, low_bandwidth_output, channel):
@@ -17,25 +18,28 @@ def feed_analyser_proc(freq_in, low_bandwidth_output, channel):
             except Empty:
                 break
         data = freq_in.get()
-
-        limit = freq_in.qsize()
-        #print(f"limit: {limit}")
-        for _ in range(limit):
-                #print("data get")
-                data = freq_in.get()
         #print(f"data length {len(data[-1])}")
         line[0].set_ydata(data[channel])
         #print("updating")
         return line
 
-    length = int(2206)
-    fig, ax = plt.subplots()
-    line = ax.plot(np.zeros(length))
-    line[0].set_xdata(np.linspace(num=length, start=0, stop=20000))
-    ax.axis((20, 20000, -5, 20))
-    ax.set_xscale('log')
-    ax.tick_params(bottom=False, top=False, labelbottom=False, right=False, left=False, labelleft=False)
-    fig.tight_layout(pad=0)
-    ani = FuncAnimation(fig, update_eq, interval=3, blit=True)
-    plt.show()
-    None
+    try:
+        data = freq_in.get()
+        print("got")
+        length = int(len(data[channel]))
+        print(length)
+        fig, ax = plt.subplots()
+        line = ax.plot(np.zeros(length))
+        x_data = np.linspace(num=length, start=0, stop=20000)
+        if(length == bluetooth_samples):
+            np.logspace(0,np.log10(20000), length)
+        line[0].set_xdata(x_data)
+        ax.axis((20, 20000, -5, 20))
+        if(length > 80):
+            ax.set_xscale('log')
+        ax.tick_params(bottom=False, top=False, labelbottom=False, right=False, left=False, labelleft=False)
+        fig.tight_layout(pad=0)
+        ani = FuncAnimation(fig, update_eq, interval=3, blit=True)
+        plt.show()
+    except Exception as e:
+        print(e)
