@@ -1,11 +1,5 @@
 from multiprocessing import Process, Queue, Manager
-from queue import Empty
-from time import sleep
 
-from matplotlib import pyplot as plt
-from matplotlib.animation import FuncAnimation
-import numpy as np
-from sound_input import sound_input_proc
 from freq_analyser import freq_analyser_proc
 from feedback_analyser import feed_analyser_proc
 import sounddevice as sd
