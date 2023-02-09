@@ -1,5 +1,7 @@
 import bluetooth
 
+print("Running")
+
 server_sock=bluetooth.BluetoothSocket( bluetooth.RFCOMM )
 
 port = 1
