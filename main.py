@@ -3,6 +3,7 @@ from multiprocessing import Process, Queue, Manager
 from freq_analyser import freq_analyser_proc
 from freq_visualiser import freq_visualiser_proc
 from feedback_analyser import feed_analyser_proc
+from bluetooth import bluetooth_proc
 import sounddevice as sd
 
 if __name__ == '__main__':
@@ -29,5 +30,8 @@ if __name__ == '__main__':
 
     feedp_1 = Process(target=feed_analyser_proc, args=(feedback_in_q1, bluetooth_in))
     feedp_1.start()
-
+    
+    bluetooth_1 = Process(target=bluetooth_proc, args=(bluetooth_in,))
+    bluetooth_1.start()
+    
     fap_1.join()
