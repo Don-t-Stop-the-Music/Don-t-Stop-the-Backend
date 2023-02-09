@@ -31,6 +31,10 @@ class ConnectionService(threading.Thread):
 
     def transmit(self): 
 
+        self.cache["frequency"] = None
+        self.cache["feedback"] = None
+        self.cache["hiss"] = None
+
         while(True):
 
             item = self.queue.get()
@@ -39,7 +43,7 @@ class ConnectionService(threading.Thread):
                 break
 
             self.cache_add(item)
-            self.client_sock.send(json.dumps(self.cache))
+            self.client_sock.send("\0" + json.dumps(self.cache))
 
 
     def cache_add(self, item):
