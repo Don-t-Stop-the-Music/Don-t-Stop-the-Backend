@@ -25,13 +25,13 @@ data = client_sock.recv(16)
 print("Received: ", data)
 
 y = "Hello World!"
-print("Sending: ", y)
 client_sock.send(y)
+print("Sent: ", y)
 
 x = (2744356319).to_bytes(4,"little")
-print("Sending: ", x)
 client_sock.send(x)
-
+print("Sent: ", x)
+ 
 time.sleep(5)
 
 client_sock.close()
