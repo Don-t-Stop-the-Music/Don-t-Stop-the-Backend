@@ -42,7 +42,7 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
                 #analyse as many times as queue allows(is actually only once when on pc)
                 while ((current_size - working) >= analysis_size):
                     sample_set = audio_block[:,working:working + analysis_size]
-                    magnitude = np.abs(np.fft.rfft(sample_set))
+                    magnitude = np.abs(np.fft.rfft(sample_set))*0.1
                     for out in high_bandwidth_output:
                         out.put_nowait(magnitude)
                     working += int(analysis_size / frequency_overlap) 
@@ -50,12 +50,9 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
                 if (magnitude[0,0] != np.nan):
                     #put frequency tag back here later
                     less_magnitude = np.transpose(list(map(lambda x: list(map(lambda y: max(magnitude[y, x[0] - 1 : x[1]]), [0,1])), nums_to_take)))
-                    low_bandwidth_output.put((less_magnitude))
+                    low_bandwidth_output.put(("freq_anal", less_magnitude))
                 current_analysed = working
                 sample_chunk = audio_input.get()
-
-def freq_analysers():
-    return 1
 
 def callback_w(audio_input):
     def callback(indata, frames, time, status):
