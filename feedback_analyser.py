@@ -8,4 +8,5 @@ from config import bluetooth_samples
 
 def feed_analyser_proc(freq_in, low_bandwidth_output):
     while True:
-        print(f"received {len(freq_in.get())} frequency sets")
+        i=1
+        #print(f"received {len(freq_in.get())} frequency sets")

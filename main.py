@@ -22,10 +22,10 @@ if __name__ == '__main__':
     fap_1 = Process(target=freq_analyser_proc, args=([vis_high_in, feedback_in_q1], bluetooth_in,))
     fap_1.start()
 
-    vis_1 = Process(target=freq_visualiser_proc, args=(vis_high_in, bluetooth_in, 0))
-    vis_1.start()
+    #vis_1 = Process(target=freq_visualiser_proc, args=(vis_high_in, bluetooth_in, 0))
+    #vis_1.start()
 
-    vis_2 = Process(target=freq_visualiser_proc, args=(bluetooth_in, bluetooth_in, 1))
+    vis_2 = Process(target=freq_visualiser_proc, args=(bluetooth_in, bluetooth_in, 0))
     vis_2.start()
 
     feedp_1 = Process(target=feed_analyser_proc, args=(feedback_in_q1, bluetooth_in))
