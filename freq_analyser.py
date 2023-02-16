@@ -68,6 +68,7 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
                 current_analysed = working
                 sample_chunk = audio_input.get()
 
+
 def callback_w(audio_input):
     '''Called whenever new information comes into the sound input.
     Places the data coming in into the audio input queue.
