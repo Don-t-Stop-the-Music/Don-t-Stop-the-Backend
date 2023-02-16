@@ -1,12 +1,10 @@
 import numpy as np
-from config import feedback_noise_thresh, slow_factor, fast_factor
-
+from config import FEEDBACK_NOISE_THRESH, SLOW_FACTOR, FAST_FACTOR
 
 def feed_analyser_proc(freq_in, low_bandwidth_output):
     prev = freq_in.get()
     feedback_tracker = np.zeros(shape=prev.shape)
     while True:
-
         temp = freq_in.get()
         slow_feedback_add = (temp > feedback_noise_thresh) & (temp > prev * slow_factor)
         fast_feedback_add = (temp > feedback_noise_thresh) & (temp > prev * fast_factor)

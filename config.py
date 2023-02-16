@@ -1,8 +1,9 @@
-sample_rate = 44100
-lowest_hz = 20
-device = 1
-frequency_overlap = 5
-bluetooth_samples = 80
-feedback_noise_thresh = 1
-slow_factor = 1
-fast_factor = 3.5
+'''constants used throughout the program'''
+SAMPLE_RATE = 44100
+LOWEST_FREQUENCY = 20
+DEVICE = 1
+FREQUENCY_OVERLAP = 5
+BLUETOOTH_SAMPLES = 160
+FEEDBACK_NOISE_THRESH = 1
+SLOW_FACTOR = 1
+FAST_FACTOR = 3.5
