@@ -26,8 +26,6 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
     current_analysed = 0
     logspace = np.logspace(0, np.log10(
         (analysis_size / 2)), BLUETOOTH_SAMPLES, dtype=int)
-    nums_to_take = np.transpose(
-        np.array([logspace, np.append(logspace[1:], logspace[-1])]))
     # print(nums_to_take)
 
     print("freq_analyser online")
@@ -63,7 +61,8 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
                 if (magnitude[0, 0] != np.nan):
                     # put frequency tag back here later
                     less_magnitude = np.transpose(list(map(lambda x: list(
-                        map(lambda y: max(magnitude[y, x[0] - 1: x[1]]), [0, 1])), nums_to_take)))
+                        map(lambda y: max(magnitude[y, x[0] - 1: x[1]]), [0, 1])), np.transpose(
+                        np.array([logspace, np.append(logspace[1:], logspace[-1])])))))
                     low_bandwidth_output.put((less_magnitude))
                 current_analysed = working
                 sample_chunk = audio_input.get()
