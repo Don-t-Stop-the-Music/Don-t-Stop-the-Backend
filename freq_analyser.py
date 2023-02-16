@@ -7,7 +7,7 @@ from queue import Queue
 from queue import Empty
 import numpy as np
 import sounddevice as sd
-from config import device, bluetooth_samples, sample_rate, lowest_hz, frequency_overlap
+from config import DEVICE, BLUETOOTH_SAMPLES, SAMPLE_RATE, LOWEST_FREQUENCY, FREQUENCY_OVERLAP
 
 
 def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
@@ -19,19 +19,19 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
     '''
     # print("what")
     audio_input = Queue()
-    analysis_size = math.ceil(sample_rate/lowest_hz) * 2
+    analysis_size = math.ceil(SAMPLE_RATE/LOWEST_FREQUENCY) * 2
     max_size = analysis_size * 40
     current_size = 0
     audio_block = np.full(shape=(2, max_size), fill_value=np.nan)
     current_analysed = 0
     logspace = np.logspace(0, np.log10(
-        (analysis_size / 2)), bluetooth_samples, dtype=int)
+        (analysis_size / 2)), BLUETOOTH_SAMPLES, dtype=int)
     nums_to_take = np.transpose(
         np.array([logspace, np.append(logspace[1:], logspace[-1])]))
     # print(nums_to_take)
 
     print("freq_analyser online")
-    with sd.InputStream(device=device, callback=callback_w(audio_input)):
+    with sd.InputStream(device=DEVICE, callback=callback_w(audio_input)):
         sample_chunk = audio_input.get()
         while True:
             try:
@@ -58,7 +58,7 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
                     magnitude = np.abs(np.fft.rfft(sample_set)) * 0.1
                     for out in high_bandwidth_output:
                         out.put_nowait(magnitude)
-                    working += int(analysis_size / frequency_overlap)
+                    working += int(analysis_size / FREQUENCY_OVERLAP)
                 # after
                 if (magnitude[0, 0] != np.nan):
                     # put frequency tag back here later
