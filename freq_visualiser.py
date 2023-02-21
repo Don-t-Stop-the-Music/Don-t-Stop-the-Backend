@@ -1,9 +1,10 @@
 '''Display a frequency queue using MatPlotLib'''
+import math
 from queue import Empty
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
 import numpy as np
-from config import BLUETOOTH_SAMPLES
+from config import BLUETOOTH_SAMPLES, SAMPLE_RATE, LOWEST_FREQUENCY
 
 
 def freq_visualiser_proc(freq_in, channel):
@@ -15,36 +16,33 @@ def freq_visualiser_proc(freq_in, channel):
 
     # pylint: disable-next=unused-argument
     def update_eq(frame):
-        # print(f"plotdata: {len(plotdata)}\nlatest: {len(latest)}")
-        # print(plotdata)
         while True:
             try:
                 data = freq_in.get_nowait()
             except Empty:
                 break
         data = freq_in.get()
-        # print(f"data length {len(data[-1])}")
         line[0].set_ydata(data[channel])
-        # print("updating")
         return line
 
     data = freq_in.get()
-    # print("got")
     length = int(len(data[channel]))
-    # print(length)
     # pylint: disable-next=invalid-name
     fig, ax = plt.subplots()
     line = ax.plot(np.zeros(length))
-    x_data = np.linspace(num=length, start=0, stop=20000)
 
     if length == BLUETOOTH_SAMPLES:
-        np.logspace(0, np.log10(20000), length)
+        x_data = np.logspace(0, np.log10((math.ceil(SAMPLE_RATE/LOWEST_FREQUENCY))),
+                             BLUETOOTH_SAMPLES, dtype=int)
+        x_data *= int(LOWEST_FREQUENCY / 2)
+        x_data[0] = 0
+    else:
+        x_data = np.linspace(num=length, start=0, stop=22050)
+
+    ax.set_xscale('log')
 
     line[0].set_xdata(x_data)
-    ax.axis((20, 20000, -5, 150))
-
-    if length > BLUETOOTH_SAMPLES:
-        ax.set_xscale('log')
+    ax.axis((1, 22050, -5, 150))
 
     ax.tick_params(bottom=False, top=False, labelbottom=False,
                    right=False, left=False, labelleft=False)
