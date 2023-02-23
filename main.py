@@ -4,7 +4,7 @@ import sounddevice as sd
 from freq_analyser import freq_analyser_proc
 from freq_visualiser import freq_visualiser_proc
 from feedback_analyser import feed_analyser_proc
-from bluetooth import bluetooth_proc
+from bluetooth_process import bluetooth_proc
 
 if __name__ == '__main__':
     freq_q_1 = Queue()
