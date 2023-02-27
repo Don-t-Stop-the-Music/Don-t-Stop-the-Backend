@@ -47,4 +47,4 @@ def index_to_freq(arr, samples):
     Returns:
           int List: array of frequencies
     """
-    return 20 + arr * (20000 - 20) / samples
+    return arr * (22050) / samples
