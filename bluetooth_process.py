@@ -2,7 +2,7 @@ import bluetooth
 import json
 from multiprocessing import Queue
 
-def connect(self):
+def connect():
     server_sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 
     server_sock.bind(("",bluetooth.PORT_ANY))
