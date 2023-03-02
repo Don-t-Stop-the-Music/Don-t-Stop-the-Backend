@@ -21,9 +21,6 @@ jobs:
         pip install sounddevice
         pip install numpy
         pip install matplotlib
-        sudo apt install bluez
-        pip install setuptools==57.5.0
-        pip install pybluez
 
     - name: Analysing the code with pylint
       run: |
