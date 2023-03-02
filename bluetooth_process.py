@@ -2,6 +2,8 @@ import bluetooth
 import json
 from multiprocessing import Queue
 
+DEFAULT_CACHE = {}
+
 def connect():
     server_sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 
@@ -27,7 +29,7 @@ def connect():
 
 def transmit(data_stream, client_sock): 
 
-    cache = {}
+    cache = DEFAULT_CACHE
     
     while(True):
 
