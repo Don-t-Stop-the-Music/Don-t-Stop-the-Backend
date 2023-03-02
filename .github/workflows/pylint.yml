@@ -21,6 +21,7 @@ jobs:
         pip install sounddevice
         pip install numpy
         pip install matplotlib
+
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py')
