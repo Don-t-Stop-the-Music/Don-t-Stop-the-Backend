@@ -9,7 +9,7 @@ def data_simulator(data_stream):
 
     while True:
         sleep(1)
-        data_stream.put(["frequency", 0])
+        data_stream.put(("frequency", 0))
     
     pass
 
