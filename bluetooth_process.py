@@ -4,6 +4,7 @@ sets up bluetooth connection and sends data asyncronously
 """
 import json
 from multiprocessing import Queue
+# pylint: disable-next=import-error
 import bluetooth
 
 
