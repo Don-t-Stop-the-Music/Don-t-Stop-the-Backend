@@ -19,10 +19,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install pylint
         pip install sounddevice
-        sudo apt install bluez
-        pip install pybluez
         pip install numpy
         pip install matplotlib
+        sudo apt install bluez
+        pip install setuptools==57.5.0
+        pip install pybluez
+
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py')
