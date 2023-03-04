@@ -6,6 +6,8 @@ import json
 from time import sleep
 import subprocess
 from multiprocessing import Queue
+from queue import Empty
+
 # pylint: disable-next=import-error
 import bluetooth
 
@@ -18,6 +20,11 @@ def open():
     Open
     Listen on port 1 and advertise bluetooth service
     """
+
+    sleep(0.1)
+    subprocess.call(['sudo', 'hciconfig', 'hci0', 'piscan'])
+    sleep(0.1)
+
     server_sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 
     server_sock.bind(("", bluetooth.PORT_ANY))
@@ -43,6 +50,7 @@ def connect(server_sock):
     Make pi discoverable and await connection
     """
 
+    sleep(0.1)
     subprocess.call(['sudo', 'hciconfig', 'hci0', 'piscan'])
     sleep(0.1)
 
@@ -61,14 +69,13 @@ def transmit(data_stream, client_sock):
     cache = INITIAL_CACHE
 
     while True:
-
         item = data_stream.get()
-
-        if item is None:
-            break
-
-        cache[item[0]] = item[1]
-        print("socket response:", client_sock.send("\0" + json.dumps(cache) + "\0"))
+        try:
+            while True:
+                cache[item[0]] = item[1]
+                item = data_stream.get_nowait()
+        except Empty:           
+            print("socket response:", client_sock.send("\0" + json.dumps(cache) + "\0"))
 
 def disconnect(client_sock, server_sock):
     """
@@ -103,6 +110,8 @@ def bluetooth_proc(data_stream: Queue):
 
             if e.errno == 104:
                 print("Connection reset by peer")
+            elif e.errno == 107:
+                print("Transport endpoint is not connected")
             else:
                 raise e
     
