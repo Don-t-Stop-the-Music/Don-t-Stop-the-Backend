@@ -21,6 +21,7 @@ jobs:
         pip install sounddevice
         pip install numpy
         pip install matplotlib
+        pip install soundfile
 
     - name: Analysing the code with pylint
       run: |

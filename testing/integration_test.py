@@ -2,9 +2,9 @@
 Integration tests
 """
 import unittest
-import soundfile as sf
 from multiprocessing import Process, Queue
 import numpy as np
+import soundfile as sf
 
 from freq_analyser import frequency_analyser
 from utility import freq_to_index
