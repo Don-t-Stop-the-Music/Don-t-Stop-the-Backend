@@ -26,3 +26,7 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         pylint $(git ls-files '*.py')
+    
+    - name: Integration Test
+      run: |
+        python -m unittest discover -s "./testing" -p "*test.py"

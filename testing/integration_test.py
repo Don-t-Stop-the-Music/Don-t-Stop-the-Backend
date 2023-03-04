@@ -15,6 +15,14 @@ class IntegrationTests(unittest.TestCase):
     Integration tests
     """
 
+    @classmethod
+    def tearDown(cls):
+        for p in cls.processes:
+            p.kill()
+
+
+    processes = []
+
     def test_sin440_frequency_values_file(self):
         """
         Tests that frequency analyser outputs valid 440hz frequency values using test sound file
@@ -28,6 +36,7 @@ class IntegrationTests(unittest.TestCase):
         fap_1 = Process(target=frequency_analyser, args=(
             [high_bandwidth], bluetooth_in, audio_input))
         fap_1.start()
+        IntegrationTests.processes.append(fap_1)
 
         for i in range(0, len(data)-1028, 1028):
             audio_input.put(data[i: i+1028])
@@ -38,6 +47,7 @@ class IntegrationTests(unittest.TestCase):
         self.assertGreater(1, sample[0][0] )
 
         fap_1.kill()
+
 
 
     def test_sin440_frequency_values_numpy(self):
@@ -53,6 +63,7 @@ class IntegrationTests(unittest.TestCase):
         fap_1 = Process(target=frequency_analyser, args=(
             [high_bandwidth], bluetooth_in, audio_input))
         fap_1.start()
+        IntegrationTests.processes.append(fap_1)
 
         sample_rate = 44100
         frequency = 440
