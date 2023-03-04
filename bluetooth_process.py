@@ -21,9 +21,7 @@ def open():
     Listen on port 1 and advertise bluetooth service
     """
 
-    sleep(0.1)
-    subprocess.call(['sudo', 'hciconfig', 'hci0', 'piscan'])
-    sleep(0.1)
+    discoverable()
 
     server_sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 
@@ -50,9 +48,7 @@ def connect(server_sock):
     Make pi discoverable and await connection
     """
 
-    sleep(0.1)
-    subprocess.call(['sudo', 'hciconfig', 'hci0', 'piscan'])
-    sleep(0.1)
+    discoverable()
 
     client_sock, address = server_sock.accept()
     print("Accepted connection from ", address)
@@ -88,6 +84,14 @@ def disconnect(client_sock, server_sock):
 
     print("Closed")
 
+def discoverable():
+    """
+    Discoverable
+    makes the pi discoverable
+    """
+    sleep(0.1)
+    subprocess.call(['sudo', 'hciconfig', 'hci0', 'piscan'])
+    sleep(0.1)
 
 def bluetooth_proc(data_stream: Queue):
     """
