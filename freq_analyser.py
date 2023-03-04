@@ -17,7 +17,6 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
             high_bandwidth_output (Queue[]): A list of queues to place the full fourier array
             low_bandwidth_output (Queue): A queue to place the downsampled fourier array
     '''
-    # print("what")
     audio_input = Queue()
     analysis_size = math.ceil(SAMPLE_RATE/LOWEST_FREQUENCY) * 2
     max_size = analysis_size * 40
@@ -26,7 +25,6 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
     current_analysed = 0
     logspace = np.logspace(0, np.log10(
         (analysis_size / 2)), BLUETOOTH_SAMPLES, dtype=int)
-    # print(nums_to_take)
 
     print("freq_analyser online")
     with sd.InputStream(device=DEVICE, callback=callback_w(audio_input)):
@@ -59,9 +57,8 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
                     for out in high_bandwidth_output:
                         out.put_nowait(magnitude)
                     working += int(analysis_size / FREQUENCY_OVERLAP)
-                # after
+                # if something changed add the most recent to the bluetooth queue
                 if magnituded:
-                    # put frequency tag back here later
                     less_magnitude = np.transpose(list(map(lambda x: list(
                         map(lambda y: max(magnitude[y, x[0] - 1: x[1]]), [0, 1])), np.transpose(
                         np.array([logspace, np.append(logspace[1:], logspace[-1])])))))
