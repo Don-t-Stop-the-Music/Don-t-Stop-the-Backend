@@ -1,0 +1,5 @@
+sounddevice
+pybluez
+soundfile
+numpy
+matplotlib
