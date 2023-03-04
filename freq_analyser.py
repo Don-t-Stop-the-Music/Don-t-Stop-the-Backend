@@ -9,6 +9,7 @@ import numpy as np
 import sounddevice as sd
 from config import DEVICE, BLUETOOTH_SAMPLES, SAMPLE_RATE, LOWEST_FREQUENCY, FREQUENCY_OVERLAP
 
+ANALYSIS_SIZE = math.ceil(SAMPLE_RATE / LOWEST_FREQUENCY) * 2
 
 def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
     '''The frequency analyser process. 
@@ -34,12 +35,11 @@ def frequency_analyser(high_bandwidth_output, low_bandwidth_output, audio_input)
         low_bandwidth_output (Queue): A queue to place the downsampled fourier array
         audio_input (Queue): A queue of samples
     """
-    analysis_size = math.ceil(SAMPLE_RATE / LOWEST_FREQUENCY) * 2
-    max_size = analysis_size * 40
+    max_size = ANALYSIS_SIZE * 40
     current_size = 0
     audio_block = np.full(shape=(2, max_size), fill_value=np.nan)
     current_analysed = 0
-    logspace = np.logspace(0, np.log10((analysis_size / 2)), BLUETOOTH_SAMPLES, dtype=int)
+    logspace = np.logspace(0, np.log10((ANALYSIS_SIZE / 2)), BLUETOOTH_SAMPLES, dtype=int)
 
     sample_chunk = audio_input.get()
     while True:
@@ -59,17 +59,17 @@ def frequency_analyser(high_bandwidth_output, low_bandwidth_output, audio_input)
             # frequency analysis
             working = current_analysed
             magnitude = np.full(
-                shape=(2, int(analysis_size / 2) + 1), fill_value=np.nan)
+                shape=(2, int(ANALYSIS_SIZE / 2) + 1), fill_value=np.nan)
             magnituded = False
             # analyse as many times as queue allows(is actually only once when on pc)
-            while (current_size - working) >= analysis_size:
+            while (current_size - working) >= ANALYSIS_SIZE:
                 sample_set = audio_block[:,
-                                            working:working + analysis_size]
+                                            working:working + ANALYSIS_SIZE]
                 magnitude = np.abs(np.fft.rfft(sample_set)) * 0.1
                 magnituded = True
                 for out in high_bandwidth_output:
                     out.put_nowait(magnitude)
-                working += int(analysis_size / FREQUENCY_OVERLAP)
+                working += int(ANALYSIS_SIZE / FREQUENCY_OVERLAP)
             # if something changed add the most recent to the bluetooth queue
             if magnituded:
                 less_magnitude = np.transpose(list(map(lambda x: list(
