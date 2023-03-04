@@ -63,7 +63,7 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
                     less_magnitude = np.transpose(list(map(lambda x: list(
                         map(lambda y: max(magnitude[y, x[0] - 1: x[1]]), [0, 1])), np.transpose(
                         np.array([logspace, np.append(logspace[1:], logspace[-1])])))))
-                    low_bandwidth_output.put(("frequency", less_magnitude))
+                    low_bandwidth_output.put(("frequency", less_magnitude.tolist()))
                 current_analysed = working
                 sample_chunk = audio_input.get()
 
