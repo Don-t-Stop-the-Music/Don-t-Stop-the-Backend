@@ -59,7 +59,7 @@ def freq_visualiser_proc(channel, freq_in, low_in, low):
     # pylint: disable-next=invalid-name
     fig, ax = plt.subplots()
     line = ax.plot(np.zeros(length))
-    
+
     if low:
         x_data = np.logspace(0, np.log10((math.ceil(SAMPLE_RATE/LOWEST_FREQUENCY))),
                              BLUETOOTH_SAMPLES, dtype=int)
