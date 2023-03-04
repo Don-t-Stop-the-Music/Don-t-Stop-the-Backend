@@ -42,43 +42,43 @@ def frequency_analyser(high_bandwidth_output, low_bandwidth_output, audio_input)
     logspace = np.logspace(0, np.log10((analysis_size / 2)), BLUETOOTH_SAMPLES, dtype=int)
 
     sample_chunk = audio_input.get()
-        while True:
-            try:
-                # Checks if buffer already full
-                if current_size + sample_chunk.size > max_size:
-                    print("rollback!")
-                    audio_block[:, :] = np.nan
-                    current_size = 0
-                    current_analysed = 0
-                # Copies new sample data into audio block
-                audio_block[:, current_size:current_size +
-                            sample_chunk.shape[0]] = np.transpose(sample_chunk)
-                current_size = current_size + sample_chunk.shape[0]
-                sample_chunk = audio_input.get_nowait()
-            except Empty:
-                # frequency analysis
-                working = current_analysed
-                magnitude = np.full(
-                    shape=(2, int(analysis_size / 2) + 1), fill_value=np.nan)
-                magnituded = False
-                # analyse as many times as queue allows(is actually only once when on pc)
-                while (current_size - working) >= analysis_size:
-                    sample_set = audio_block[:,
-                                             working:working + analysis_size]
-                    magnitude = np.abs(np.fft.rfft(sample_set)) * 0.1
-                    magnituded = True
-                    for out in high_bandwidth_output:
-                        out.put_nowait(magnitude)
-                    working += int(analysis_size / FREQUENCY_OVERLAP)
-                # if something changed add the most recent to the bluetooth queue
-                if magnituded:
-                    less_magnitude = np.transpose(list(map(lambda x: list(
-                        map(lambda y: max(magnitude[y, x[0] - 1: x[1]]), [0, 1])), np.transpose(
-                        np.array([logspace, np.append(logspace[1:], logspace[-1])])))))
-                    low_bandwidth_output.put(
-                        ("frequency", less_magnitude.tolist()))
-                current_analysed = working
-                sample_chunk = audio_input.get()
+    while True:
+        try:
+            # Checks if buffer already full
+            if current_size + sample_chunk.size > max_size:
+                print("rollback!")
+                audio_block[:, :] = np.nan
+                current_size = 0
+                current_analysed = 0
+            # Copies new sample data into audio block
+            audio_block[:, current_size:current_size +
+                        sample_chunk.shape[0]] = np.transpose(sample_chunk)
+            current_size = current_size + sample_chunk.shape[0]
+            sample_chunk = audio_input.get_nowait()
+        except Empty:
+            # frequency analysis
+            working = current_analysed
+            magnitude = np.full(
+                shape=(2, int(analysis_size / 2) + 1), fill_value=np.nan)
+            magnituded = False
+            # analyse as many times as queue allows(is actually only once when on pc)
+            while (current_size - working) >= analysis_size:
+                sample_set = audio_block[:,
+                                            working:working + analysis_size]
+                magnitude = np.abs(np.fft.rfft(sample_set)) * 0.1
+                magnituded = True
+                for out in high_bandwidth_output:
+                    out.put_nowait(magnitude)
+                working += int(analysis_size / FREQUENCY_OVERLAP)
+            # if something changed add the most recent to the bluetooth queue
+            if magnituded:
+                less_magnitude = np.transpose(list(map(lambda x: list(
+                    map(lambda y: max(magnitude[y, x[0] - 1: x[1]]), [0, 1])), np.transpose(
+                    np.array([logspace, np.append(logspace[1:], logspace[-1])])))))
+                low_bandwidth_output.put(
+                    ("frequency", less_magnitude.tolist()))
+            current_analysed = working
+            sample_chunk = audio_input.get()
 
 def callback_w(audio_input):
     '''Called whenever new information comes into the sound input.
