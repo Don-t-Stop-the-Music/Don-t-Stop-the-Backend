@@ -16,29 +16,37 @@ def freq_visualiser_proc(channel, freq_in, low_in, low):
 
     # pylint: disable-next=unused-argument
     def update_eq(frame):
+
         # print(f"plotdata: {len(plotdata)}\nlatest: {len(latest)}")
         # print(plotdata)
-        while True:
-            try:
-                if low:
-                    new_data = low_in.get_nowait()
-                    if new_data[0] == "frequency":
-                        data = new_data[1]
-                else:
-                    data = freq_in.get_nowait()
-            except Empty:
-                break
-        if low:
-            new_data = low_in.get()
-            if new_data[0] == "frequency":
-                data = new_data[1]
-        else:
-            data = freq_in.get()
+        got_freq = False
+        while not got_freq:
+            while True:
+                try:
+                    if low:
+                        new_data = low_in.get_nowait()
+                        if new_data[0] == "frequency":
+                            data = new_data[1]
+                            got_freq = True
+                    else:
+                        data = freq_in.get_nowait()
+                        got_freq = True
+                except Empty:
+                    break
+            if low:
+                new_data = low_in.get()
+                if new_data[0] == "frequency":
+                    data = new_data[1]
+                    got_freq = True
+            else:
+                data = freq_in.get()
+                got_freq = True
         # print(f"data length {len(data[-1])}")
         line[0].set_ydata(data[channel])
         # print("updating")
         return line
 
+    data = np.zeros((2, BLUETOOTH_SAMPLES))
     if low:
         new_data = low_in.get()
         if new_data[0] == "frequency":
@@ -51,7 +59,7 @@ def freq_visualiser_proc(channel, freq_in, low_in, low):
     # pylint: disable-next=invalid-name
     fig, ax = plt.subplots()
     line = ax.plot(np.zeros(length))
-
+    
     if low:
         x_data = np.logspace(0, np.log10((math.ceil(SAMPLE_RATE/LOWEST_FREQUENCY))),
                              BLUETOOTH_SAMPLES, dtype=int)
