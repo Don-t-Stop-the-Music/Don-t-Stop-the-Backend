@@ -2,6 +2,8 @@
 Feedback Analyser
 Takes in frequency samples and detects frequency bands which are feedbacking
 """
+from queue import Empty
+
 import numpy as np
 from config import FEEDBACK_NOISE_THRESH, SLOW_FACTOR, FAST_FACTOR
 from utility import index_to_freq
@@ -19,8 +21,14 @@ def feed_analyser_proc(freq_in, low_bandwidth_output):
     """
     prev = freq_in.get()
     feedback_tracker = np.zeros(shape=prev.shape)
+    temp = freq_in.get()
     while True:
-        temp = freq_in.get()
+        while True:
+            try:
+                temp = freq_in.get_nowait()
+            except Empty:
+                break
+
         slow_feedback_add = (temp > FEEDBACK_NOISE_THRESH) & (temp > prev * SLOW_FACTOR)
         fast_feedback_add = (temp > FEEDBACK_NOISE_THRESH) & (temp > prev * FAST_FACTOR)
         feedback_tracker += 1 * slow_feedback_add + 1000 * fast_feedback_add
@@ -34,6 +42,6 @@ def feed_analyser_proc(freq_in, low_bandwidth_output):
         for i in range(slow_feedback.shape[0]):
             slow_bands.append(index_to_freq(slow_feedback[i].nonzero()[0], prev.shape[1]))
             fast_bands.append(index_to_freq(fast_feedback[i].nonzero()[0], prev.shape[1]))
-            bands.append(slow_bands[i] + fast_bands[i])
+            bands.append(np.unique(np.concatenate((slow_bands[i], fast_bands[i]))).tolist())
 
         low_bandwidth_output.put(("feedback", bands))
