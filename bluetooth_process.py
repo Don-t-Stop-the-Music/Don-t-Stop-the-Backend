@@ -117,4 +117,4 @@ def bluetooth_proc(data_stream: Queue):
             elif bluetooth_error.errno == 107:
                 print("Transport endpoint is not connected")
             else:
-                raise e
+                raise bluetooth_error
