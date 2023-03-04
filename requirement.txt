@@ -1,2 +1,3 @@
 sounddevice
 pybluez
+soundfile

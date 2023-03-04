@@ -1,3 +1,6 @@
+"""
+Utility Functions
+"""
 from config import SAMPLE_RATE
 
 def index_to_freq(arr, samples):
