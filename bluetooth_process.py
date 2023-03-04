@@ -110,11 +110,11 @@ def bluetooth_proc(data_stream: Queue):
             transmit(data_stream, client_sock)
             disconnect(client_sock, server_sock)
 
-        except bluetooth.btcommon.BluetoothError as e:
+        except bluetooth.btcommon.BluetoothError as bluetooth_error:
 
-            if e.errno == 104:
+            if bluetooth_error.errno == 104:
                 print("Connection reset by peer")
-            elif e.errno == 107:
+            elif bluetooth_error.errno == 107:
                 print("Transport endpoint is not connected")
             else:
                 raise e
