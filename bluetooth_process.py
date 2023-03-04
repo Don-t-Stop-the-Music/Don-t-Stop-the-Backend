@@ -8,14 +8,14 @@ import subprocess
 from multiprocessing import Queue
 from queue import Empty
 
-# pylint: disable-next=import-error
 import bluetooth
 
 
-INITIAL_CACHE = {"frequency": [[59,75,63], [27,89,32]], "minFrequency": 0, "maxFrequency": 80, "hiss": [False, False], "feedback": [[], []]}
+INITIAL_CACHE = {"frequency": [[59,75,63], [27,89,32]], "minFrequency": 0, "maxFrequency": 80,
+                  "hiss": [False, False], "feedback": [[], []]}
 
 
-def open():
+def open_server():
     """
     Open
     Listen on port 1 and advertise bluetooth service
@@ -70,7 +70,7 @@ def transmit(data_stream, client_sock):
             while True:
                 cache[item[0]] = item[1]
                 item = data_stream.get_nowait()
-        except Empty:           
+        except Empty:
             print("socket response:", client_sock.send("\0" + json.dumps(cache) + "\0"))
 
 def disconnect(client_sock, server_sock):
@@ -98,8 +98,8 @@ def bluetooth_proc(data_stream: Queue):
     bluetooth_proc
     acts as an entry point for bluetoothConnection reset by peer
     """
-    
-    server_sock = open()
+
+    server_sock = open_server()
 
     while True:
 
@@ -118,6 +118,3 @@ def bluetooth_proc(data_stream: Queue):
                 print("Transport endpoint is not connected")
             else:
                 raise e
-    
-    
-    
