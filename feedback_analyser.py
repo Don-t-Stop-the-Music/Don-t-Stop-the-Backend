@@ -6,6 +6,7 @@ from queue import Empty
 
 import numpy as np
 from config import FEEDBACK_NOISE_THRESH, SLOW_FACTOR, FAST_FACTOR
+from utility import index_to_freq
 
 
 def feed_analyser_proc(freq_in, low_bandwidth_output):
@@ -27,7 +28,7 @@ def feed_analyser_proc(freq_in, low_bandwidth_output):
                 temp = freq_in.get_nowait()
             except Empty:
                 break
-        
+
         slow_feedback_add = (temp > FEEDBACK_NOISE_THRESH) & (temp > prev * SLOW_FACTOR)
         fast_feedback_add = (temp > FEEDBACK_NOISE_THRESH) & (temp > prev * FAST_FACTOR)
         feedback_tracker += 1 * slow_feedback_add + 1000 * fast_feedback_add
@@ -44,15 +45,3 @@ def feed_analyser_proc(freq_in, low_bandwidth_output):
             bands.append(np.unique(np.concatenate((slow_bands[i], fast_bands[i]))).tolist())
 
         low_bandwidth_output.put(("feedback", bands))
-
-
-def index_to_freq(arr, samples):
-    """
-    Converts sample array index into frequencies
-    Parameters:
-          arr (List): Input list of indices
-          samples (int): Number of samples in full freq array
-    Returns:
-          int List: array of frequencies
-    """
-    return arr * (22050) / samples

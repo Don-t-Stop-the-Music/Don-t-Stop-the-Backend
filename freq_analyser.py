@@ -17,18 +17,31 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
             high_bandwidth_output (Queue[]): A list of queues to place the full fourier array
             low_bandwidth_output (Queue): A queue to place the downsampled fourier array
     '''
+
     audio_input = Queue()
-    analysis_size = math.ceil(SAMPLE_RATE/LOWEST_FREQUENCY) * 2
+
+    print("freq_analyser online")
+    with sd.InputStream(device=DEVICE, callback=callback_w(audio_input)):
+        frequency_analyser(high_bandwidth_output, low_bandwidth_output, audio_input)
+
+
+def frequency_analyser(high_bandwidth_output, low_bandwidth_output, audio_input):
+    """
+    The frequency analyser process.
+    Process sound in and fourier transform, downsample for other processes
+    Parameters:
+        high_bandwidth_output (Queue[]): A list of queues to place the full fourier array
+        low_bandwidth_output (Queue): A queue to place the downsampled fourier array
+        audio_input (Queue): A queue of samples
+    """
+    analysis_size = math.ceil(SAMPLE_RATE / LOWEST_FREQUENCY) * 2
     max_size = analysis_size * 40
     current_size = 0
     audio_block = np.full(shape=(2, max_size), fill_value=np.nan)
     current_analysed = 0
-    logspace = np.logspace(0, np.log10(
-        (analysis_size / 2)), BLUETOOTH_SAMPLES, dtype=int)
+    logspace = np.logspace(0, np.log10((analysis_size / 2)), BLUETOOTH_SAMPLES, dtype=int)
 
-    print("freq_analyser online")
-    with sd.InputStream(device=DEVICE, callback=callback_w(audio_input)):
-        sample_chunk = audio_input.get()
+    sample_chunk = audio_input.get()
         while True:
             try:
                 # Checks if buffer already full
@@ -66,7 +79,6 @@ def freq_analyser_proc(high_bandwidth_output, low_bandwidth_output):
                         ("frequency", less_magnitude.tolist()))
                 current_analysed = working
                 sample_chunk = audio_input.get()
-
 
 def callback_w(audio_input):
     '''Called whenever new information comes into the sound input.
