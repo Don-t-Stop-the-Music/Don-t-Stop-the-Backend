@@ -33,7 +33,7 @@ def feed_analyser_proc(freq_in, low_bandwidth_output):
         for i in range(slow_feedback.shape[0]):
             slow_bands.append(index_to_freq(slow_feedback[i].nonzero()[0], prev.shape[1]))
             fast_bands.append(index_to_freq(fast_feedback[i].nonzero()[0], prev.shape[1]))
-            bands.append(slow_bands[i] + fast_bands[i])
+            bands.append(np.unique(np.concatenate((slow_bands[i], fast_bands[i]))))
 
         low_bandwidth_output.put(("feedback", bands))
 
