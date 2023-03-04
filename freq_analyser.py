@@ -39,8 +39,7 @@ def frequency_analyser(high_bandwidth_output, low_bandwidth_output, audio_input)
     current_size = 0
     audio_block = np.full(shape=(2, max_size), fill_value=np.nan)
     current_analysed = 0
-    logspace = np.logspace(0, np.log10(
-        (analysis_size / 2)), BLUETOOTH_SAMPLES, dtype=int)
+    logspace = np.logspace(0, np.log10((analysis_size / 2)), BLUETOOTH_SAMPLES, dtype=int)
 
     sample_chunk = audio_input.get()
     while True:

@@ -4,6 +4,7 @@ Takes in frequency samples and detects frequency bands which are feedbacking
 """
 import numpy as np
 from config import FEEDBACK_NOISE_THRESH, SLOW_FACTOR, FAST_FACTOR
+from utility import index_to_freq
 
 
 def feed_analyser_proc(freq_in, low_bandwidth_output):
@@ -36,15 +37,3 @@ def feed_analyser_proc(freq_in, low_bandwidth_output):
             bands.append(slow_bands[i] + fast_bands[i])
 
         low_bandwidth_output.put(("feedback", bands))
-
-
-def index_to_freq(arr, samples):
-    """
-    Converts sample array index into frequencies
-    Parameters:
-          arr (List): Input list of indices
-          samples (int): Number of samples in full freq array
-    Returns:
-          int List: array of frequencies
-    """
-    return arr * (22050) / samples
