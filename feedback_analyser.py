@@ -27,7 +27,7 @@ def feed_analyser_proc(freq_in, low_bandwidth_output):
                 temp = freq_in.get_nowait()
             except Empty:
                 break
-        
+
         slow_feedback_add = (temp > FEEDBACK_NOISE_THRESH) & (temp > prev * SLOW_FACTOR)
         fast_feedback_add = (temp > FEEDBACK_NOISE_THRESH) & (temp > prev * FAST_FACTOR)
         feedback_tracker += 1 * slow_feedback_add + 1000 * fast_feedback_add
