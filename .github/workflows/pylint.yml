@@ -20,6 +20,9 @@ jobs:
         sudo apt-get install libportaudio2
         python -m pip install --upgrade pip
         pip install pylint
+        sudo apt install bluez
+        sudo apt-get install libbluetooth-dev
+        pip install setuptools==57.5.0
         pip install -r requirements.txt
 
     - name: Analysing the code with pylint
