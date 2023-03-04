@@ -16,9 +16,9 @@ class IntegrationTests(unittest.TestCase):
     """
 
     @classmethod
-    def tearDown(cls):
-        for p in cls.processes:
-            p.kill()
+    def tearDownClass(cls):
+        for process in cls.processes:
+            process.kill()
 
 
     processes = []
