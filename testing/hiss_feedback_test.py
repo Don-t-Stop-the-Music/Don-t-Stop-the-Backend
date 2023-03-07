@@ -2,7 +2,7 @@
 Feedback/Hiss tests
 """
 import unittest
-from multiprocessing import Process, Queue, Manager
+from multiprocessing import Process, Manager
 import numpy as np
 
 from feedback_hiss_analyser import feed_hiss_analyser_proc
@@ -69,4 +69,4 @@ class FeedbackHissTests(unittest.TestCase):
 
 
 if __name__ == '__main__':
-   unittest.main()
+    unittest.main()

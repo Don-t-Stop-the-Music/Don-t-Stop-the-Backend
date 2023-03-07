@@ -2,7 +2,7 @@
 Integration tests
 """
 import unittest
-from multiprocessing import Process, Queue, Manager
+from multiprocessing import Process, Manager
 import numpy as np
 import soundfile as sf
 
@@ -45,7 +45,6 @@ class IntegrationTests(unittest.TestCase):
         self.assertLess(1, sample[0][freq_to_index(440, len(sample[1]))])
         self.assertGreater(1, sample[0][0])
 
-
     def test_sin440_frequency_values_numpy(self):
         """
         Tests that frequency analyser outputs valid 440hz frequency values using numpy array
@@ -76,6 +75,5 @@ class IntegrationTests(unittest.TestCase):
         self.assertGreater(1, sample[0][0])
 
 
-    
 if __name__ == '__main__':
     unittest.main()
