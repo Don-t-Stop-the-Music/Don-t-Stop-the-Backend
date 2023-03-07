@@ -31,7 +31,7 @@ def open_server():
     server_sock.listen(1)
     print("listening on port:", bluetooth.PORT_ANY)
 
-    uuid = "1e0ca4ea-299d-4335-93eb-27fcfe7fa848" 
+    uuid = "1e0ca4ea-299d-4335-93eb-27fcfe7fa848"
     #uuid common between client and server, used by the client to find the server easily
 
     bluetooth.advertise_service(
@@ -40,7 +40,7 @@ def open_server():
         service_id=uuid,
         service_classes=[uuid, bluetooth.SERIAL_PORT_CLASS],
         profiles=[bluetooth.SERIAL_PORT_PROFILE],
-    ) #set up attributes of the bluetooth service 
+    ) #set up attributes of the bluetooth service
 
     return server_sock
 
@@ -129,7 +129,7 @@ def bluetooth_proc(data_stream: Queue):
                 print("Transport endpoint is not connected")
             else:
                 raise bluetooth_error
-            
+
         except KeyboardInterrupt:
             #catch keyboard interrupt and close connection (and close program)
             disconnect(client_sock, server_sock)
