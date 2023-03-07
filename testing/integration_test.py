@@ -2,7 +2,7 @@
 Integration tests
 """
 import unittest
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Manager
 import numpy as np
 import soundfile as sf
 
@@ -20,7 +20,6 @@ class IntegrationTests(unittest.TestCase):
         for process in cls.processes:
             process.kill()
 
-
     processes = []
 
     def test_sin440_frequency_values_file(self):
@@ -28,10 +27,10 @@ class IntegrationTests(unittest.TestCase):
         Tests that frequency analyser outputs valid 440hz frequency values using test sound file
         """
         data, _ = sf.read("testing/audio/440hz.wav", always_2d=True)
-        high_bandwidth = Queue()
+        high_bandwidth = Manager().Queue()
 
-        bluetooth_in = Queue()
-        audio_input = Queue()
+        bluetooth_in = Manager().Queue()
+        audio_input = Manager().Queue()
 
         fap_1 = Process(target=frequency_analyser, args=(
             [high_bandwidth], bluetooth_in, audio_input))
@@ -44,21 +43,17 @@ class IntegrationTests(unittest.TestCase):
         sample = high_bandwidth.get()
 
         self.assertLess(1, sample[0][freq_to_index(440, len(sample[1]))])
-        self.assertGreater(1, sample[0][0] )
-
-        fap_1.kill()
-
-
+        self.assertGreater(1, sample[0][0])
 
     def test_sin440_frequency_values_numpy(self):
         """
         Tests that frequency analyser outputs valid 440hz frequency values using numpy array
         """
 
-        high_bandwidth = Queue()
+        high_bandwidth = Manager().Queue()
 
-        bluetooth_in = Queue()
-        audio_input = Queue()
+        bluetooth_in = Manager().Queue()
+        audio_input = Manager().Queue()
 
         fap_1 = Process(target=frequency_analyser, args=(
             [high_bandwidth], bluetooth_in, audio_input))
@@ -77,9 +72,7 @@ class IntegrationTests(unittest.TestCase):
         sample = high_bandwidth.get()
 
         self.assertLess(1, sample[0][freq_to_index(440, len(sample[1]))])
-        self.assertGreater(1, sample[0][0] )
-
-        fap_1.kill()
+        self.assertGreater(1, sample[0][0])
 
 
 if __name__ == '__main__':

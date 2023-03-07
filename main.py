@@ -1,5 +1,5 @@
 '''The main module, the one that is run to start the program'''
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Manager
 import sounddevice as sd
 from freq_analyser import freq_analyser_proc
 #from freq_visualiser import freq_visualiser_proc
@@ -8,11 +8,11 @@ from bluetooth_process import bluetooth_proc
 from config import SAMPLE_RATE
 
 if __name__ == '__main__':
-    vis_high_in = Queue()
-    feedback_in_q1 = Queue()
-    hiss_in = Queue()
+    #vis_high_in = Manager().Queue()
+    feedback_in_q1 = Manager().Queue()
+    hiss_in = Manager().Queue()
 
-    bluetooth_in = Queue()
+    bluetooth_in = Manager().Queue()
     bluetooth_in.put(("max_frequency", SAMPLE_RATE / 2))
 
     print(sd.query_devices())
