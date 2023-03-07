@@ -1,1 +1,2 @@
-"# Don-t-Stop-the-Backend" 
+# Don't Stop the Backend
+This is the code for Don't Stop the Music which runs on the Raspberry Pi 4. Pull this code, and connect a 2 channel audio input device (we used a Rolad Rubix 22). Plug one input into the stereo out L on the soundboard, and the other into monitor out L. Connect your phone over bluetooth and it will be informed of any issues you have on your Yamaha MW12CX, and told how to solve them.
