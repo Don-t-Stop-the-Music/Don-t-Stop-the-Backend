@@ -1,6 +1,5 @@
 '''The main module, the one that is run to start the program'''
 from multiprocessing import Process, Manager
-import sounddevice as sd
 from freq_analyser import freq_analyser_proc
 # from freq_visualiser import freq_visualiser_proc
 from feedback_hiss_analyser import feed_hiss_analyser_proc

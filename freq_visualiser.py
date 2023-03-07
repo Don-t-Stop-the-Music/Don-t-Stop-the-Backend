@@ -16,8 +16,8 @@ def freq_visualiser_proc(channel, freq_in, low_in, low):
     # update_eq is called by matplotlib to get new data for graphs
     # pylint: disable-next=unused-argument
     def update_eq(frame):
-        # this is a loop to make sure that when connected to bluetooth, you actually get a new set of frequency levels
-        # instead of just hiss and feedback data.
+        # this is a loop to make sure that when connected to bluetooth,
+        # you actually get a new set of frequency levels instead of just hiss and feedback data.
         got_freq = False
         while not got_freq:
             # collect frequency data from a queue, different for bluetooth data and high res data.
@@ -62,8 +62,8 @@ def freq_visualiser_proc(channel, freq_in, low_in, low):
     fig, ax = plt.subplots()
     line = ax.plot(np.zeros(length))
 
-    # these are the scales, designed to match the downsampling in freq_analyser if coming from bluetooth,
-    # just to make sure the x axis scale is correct for the data.
+    # these are the scales, designed to match the downsampling in freq_analyser
+    # if coming from bluetooth, just to make sure the x axis scale is correct for the data.
     # this complicated function is not needed on phone where it just displays linearly.
     if low:
         x_data = np.logspace(0, np.log10((math.ceil(SAMPLE_RATE/LOWEST_FREQUENCY))),

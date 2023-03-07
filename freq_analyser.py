@@ -88,7 +88,8 @@ def frequency_analyser(high_bandwidth_output, low_bandwidth_output, audio_input)
                 working += int(ANALYSIS_SIZE / FREQUENCY_OVERLAP)
             # if something changed add the most recent to the bluetooth queue
             if magnituded:
-                # complicated line: this takes the analysed data, splits it into chunks based on the logspace,
+                # complicated line: this takes the analysed data,
+                # splits it into chunks based on the logspace,
                 # takes the max of each of the chunks and reformats it to be the right shape.
                 less_magnitude = np.transpose(list(map(lambda x: list(
                     map(lambda y: max(magnitude[y, x[0] - 1: x[1]]), [0, 1])), np.transpose(
