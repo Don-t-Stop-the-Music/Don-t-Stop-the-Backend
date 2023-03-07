@@ -48,12 +48,16 @@ def feed_hiss_analyser_proc(freq_in, low_bandwidth_output):
                     fast_feedback[i].nonzero()[0], prev.shape[1]))
                 bands.append((slow_bands[i]).tolist())
 
+            # Hiss Detection.
             hiss = [False, False]
+            # for each channel, take the quietest 10% of frequencies and check if their average is
+            # above the threshold in config.py
             for i in range(2):
                 if np.mean(temp[i][np.argpartition(temp[i], int(HIGH_SAMPLES / 10))]) > HISS_THRESH:
                     hiss[i] = True
 
+            # place the results from analysis into the bluetooth queue and block.
             low_bandwidth_output.put(("hiss", hiss))
-
             low_bandwidth_output.put(("feedback", bands))
+
             temp = freq_in.get()
