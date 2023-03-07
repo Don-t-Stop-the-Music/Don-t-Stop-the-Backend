@@ -1,0 +1,16 @@
+[Unit]
+Description=Don't Stop the Music Backend
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+Group=root
+WorkingDirectory=/usr/local/dont-stop-the-music
+ExecStart=/usr/local/dont-stop-the-music/run.sh
+
+[Install]
+WantedBy=multi-user.target
