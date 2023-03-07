@@ -56,3 +56,4 @@ def feed_hiss_analyser_proc(freq_in, low_bandwidth_output):
             low_bandwidth_output.put(("hiss", hiss))
 
             low_bandwidth_output.put(("feedback", bands))
+            temp = freq_in.get()
