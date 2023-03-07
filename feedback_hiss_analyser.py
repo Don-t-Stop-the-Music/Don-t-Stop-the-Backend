@@ -29,8 +29,10 @@ def feed_hiss_analyser_proc(freq_in, low_bandwidth_output):
                 temp = freq_in.get_nowait()
         except Empty:
 
-            slow_feedback_add = (temp > FEEDBACK_NOISE_THRESH) & (temp > prev * SLOW_FACTOR)
-            fast_feedback_add = (temp > FEEDBACK_NOISE_THRESH) & (temp > prev * FAST_FACTOR)
+            slow_feedback_add = (temp > FEEDBACK_NOISE_THRESH) & (
+                temp > prev * SLOW_FACTOR)
+            fast_feedback_add = (temp > FEEDBACK_NOISE_THRESH) & (
+                temp > prev * FAST_FACTOR)
             feedback_tracker += 1 * slow_feedback_add + 1000 * fast_feedback_add
             feedback_tracker[~(slow_feedback_add | fast_feedback_add)] = 0
             slow_feedback = (feedback_tracker % 1000) > 15
@@ -40,13 +42,15 @@ def feed_hiss_analyser_proc(freq_in, low_bandwidth_output):
             fast_bands = []
             bands = []
             for i in range(slow_feedback.shape[0]):
-                slow_bands.append(index_to_freq(slow_feedback[i].nonzero()[0], prev.shape[1]))
-                fast_bands.append(index_to_freq(fast_feedback[i].nonzero()[0], prev.shape[1]))
+                slow_bands.append(index_to_freq(
+                    slow_feedback[i].nonzero()[0], prev.shape[1]))
+                fast_bands.append(index_to_freq(
+                    fast_feedback[i].nonzero()[0], prev.shape[1]))
                 bands.append((slow_bands[i]).tolist())
 
             hiss = [False, False]
             for i in range(2):
-                if np.mean(temp[i][np.argpartition(temp[i], int(HIGH_SAMPLES / 10))] > HISS_THRESH):
+                if np.mean(temp[i][np.argpartition(temp[i], int(HIGH_SAMPLES / 10))]) > HISS_THRESH:
                     hiss[i] = True
 
             low_bandwidth_output.put(("hiss", hiss))
