@@ -41,7 +41,7 @@ class IntegrationTests(unittest.TestCase):
         # Required to clean up process after unit test
         IntegrationTests.processes.append(fap_1)
 
-        # Input samples into audio in queue. 
+        # Input samples into audio in queue.
         # Need input 1028 large block of samples at time to simulate sounddevice callback
         for i in range(0, len(data)-1028, 1028):
             audio_input.put(data[i: i+1028])

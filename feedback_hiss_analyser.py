@@ -34,14 +34,16 @@ def feed_hiss_analyser_proc(freq_in, low_bandwidth_output):
             while True:
                 temp = freq_in.get_nowait()
         except Empty:
-            # Detects in there is frequency magnitude is over threshold and slow feedback multiplicative factor of previous value
+            # Detects in there is frequency magnitude is over threshold
+            # and slow feedback multiplicative factor of previous value
             slow_feedback_add = (temp > FEEDBACK_NOISE_THRESH) & (
                 temp > prev * SLOW_FACTOR)
-            
-            # Detects in there is frequency magnitude is over threshold and fast feedback multiplicative factor of previous value
+
+            # Detects in there is frequency magnitude is over threshold
+            # and fast feedback multiplicative factor of previous value
             fast_feedback_add = (temp > FEEDBACK_NOISE_THRESH) & (
                 temp > prev * FAST_FACTOR)
-            
+
             # Adds 1 to feedback cum sum for slow and 1000 for fast feedback
             feedback_tracker += 1 * slow_feedback_add + 1000 * fast_feedback_add
 
@@ -52,8 +54,9 @@ def feed_hiss_analyser_proc(freq_in, low_bandwidth_output):
             slow_feedback = (feedback_tracker % 1000) > 15
             fast_feedback = (feedback_tracker / 1000) > 10
 
-            # This is mapping from the boolean array of feedback at each index to a compacted array of frequencies which are feedbacking.
-            # Is a list as input has multiple channels 
+            # This is mapping from the boolean array of feedback at each index
+            # to a compacted array of frequencies which are feedbacking.
+            # Is a list as input has multiple channels
             slow_bands = []
             fast_bands = []
             bands = []
