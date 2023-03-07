@@ -1,6 +1,7 @@
 [Unit]
 Description=Don't Stop the Music Backend
-After=network.target
+After=network.target bluetooth.target
+Requires=network.target bluetooth.target
 StartLimitIntervalSec=0
 
 [Service]
