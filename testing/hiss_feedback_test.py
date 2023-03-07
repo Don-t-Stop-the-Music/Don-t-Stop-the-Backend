@@ -36,6 +36,8 @@ class FeedbackHissTests(unittest.TestCase):
             high_bandwidth, feedback_out))
         hiss.daemon = True
         hiss.start()
+
+        # Required to clean up process after unit test
         FeedbackHissTests.processes.append(hiss)
 
         sample = feedback_out.get()
@@ -58,13 +60,14 @@ class FeedbackHissTests(unittest.TestCase):
         hiss = Process(target=feed_hiss_analyser_proc, args=(
             high_bandwidth, feedback_out))
         hiss.start()
+    
+        # Required to clean up process after unit test
         FeedbackHissTests.processes.append(hiss)
 
         sample = feedback_out.get()
 
         self.assertEqual(sample[0], "hiss")
         self.assertEqual(sample[1][0], False)
-
 
 
 

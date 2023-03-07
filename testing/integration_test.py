@@ -26,6 +26,8 @@ class IntegrationTests(unittest.TestCase):
         """
         Tests that frequency analyser outputs valid 440hz frequency values using test sound file
         """
+
+        # Read test audio file
         data, _ = sf.read("testing/audio/440hz.wav", always_2d=True)
         high_bandwidth = Manager().Queue()
 
@@ -35,8 +37,12 @@ class IntegrationTests(unittest.TestCase):
         fap_1 = Process(target=frequency_analyser, args=(
             [high_bandwidth], bluetooth_in, audio_input))
         fap_1.start()
+
+        # Required to clean up process after unit test
         IntegrationTests.processes.append(fap_1)
 
+        # Input samples into audio in queue. 
+        # Need input 1028 large block of samples at time to simulate sounddevice callback
         for i in range(0, len(data)-1028, 1028):
             audio_input.put(data[i: i+1028])
 
@@ -58,14 +64,20 @@ class IntegrationTests(unittest.TestCase):
         fap_1 = Process(target=frequency_analyser, args=(
             [high_bandwidth], bluetooth_in, audio_input))
         fap_1.start()
+
+        # Required to clean up process after unit test
         IntegrationTests.processes.append(fap_1)
 
+        # Creates Numpy array with audio samples of 440hz sine wave
         sample_rate = 44100
         frequency = 440
         length = 5
         time = np.linspace(0, length, sample_rate * length)
         data = np.sin(frequency * 2 * np.pi * time)
         data = np.transpose(data)
+
+        # Input samples into audio in queue
+        # Need input 1028 large block of samples at time to simulate sounddevice callback
         for i in range(0, len(data)-1028, 1028):
             audio_input.put(data[i: i+1028])
 

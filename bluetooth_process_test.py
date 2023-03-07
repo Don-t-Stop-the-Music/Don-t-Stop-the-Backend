@@ -2,7 +2,7 @@
 Bluetooth process test
 sends test data over bluetooth
 """
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Manager
 from time import sleep
 from bluetooth_process import bluetooth_proc
 
@@ -26,7 +26,7 @@ def data_simulator(data_stream):
 
 if __name__ == "__main__":
 
-    bluetooth_in = Queue()
+    bluetooth_in = Manager().Queue()
     simulator_1 = Process(target=data_simulator, args=(bluetooth_in,))
     simulator_1.start()
     bluetooth_1 = Process(target=bluetooth_proc, args=(bluetooth_in,))
