@@ -50,9 +50,6 @@ def connect(server_sock):
     Make pi discoverable and await connection
     """
 
-    discoverable()
-    #bluetooth device must be 'discoverable' for the client to find the server
-
     client_sock, address = server_sock.accept() #blocks until a connection is accepted
     print("Accepted connection from ", address)
 
@@ -107,6 +104,9 @@ def bluetooth_proc(data_stream: Queue):
     acts as an entry point for bluetoothConnection reset by peer
     """
 
+    discoverable()
+    #bluetooth device must be 'discoverable' for the client to find the server
+
     server_sock = open_server()
     #open and set up the server
 
@@ -121,7 +121,7 @@ def bluetooth_proc(data_stream: Queue):
             #transmit data
 
         except bluetooth.btcommon.BluetoothError as bluetooth_error:
-            #catch "connection reset" and "endpoint not connected" and restart connection
+            #catch "connection reset" and "endpoint not connected"
 
             if bluetooth_error.errno == 104:
                 print("Connection reset by peer")
@@ -129,6 +129,9 @@ def bluetooth_proc(data_stream: Queue):
                 print("Transport endpoint is not connected")
             else:
                 raise bluetooth_error
+
+            discoverable()
+            #then make bluetooth device discoverable then restart
 
         except KeyboardInterrupt:
             #catch keyboard interrupt and close connection (and close program)

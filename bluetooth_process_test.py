@@ -16,11 +16,11 @@ def data_simulator(data_stream):
     while True:
 
         sleep(1)
-        data_stream.put(("frequency", [10,20,30,40,50,60,70,80]))
+        data_stream.put(("frequency", [[1,2,3,4,5,6,7],[1,2,3,4,5,6,7]]))
         data_stream.put(("hiss", [False,False]))
 
         sleep(1)
-        data_stream.put(("frequency", [80,70,60,50,40,30,20,10]))
+        data_stream.put(("frequency", [[7,6,5,4,3,2,1],[7,6,5,4,3,2,1]]))
         data_stream.put(("hiss", [True,True]))
 
 
